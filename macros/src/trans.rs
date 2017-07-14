@@ -1,13 +1,13 @@
+use quote::{Ident, Tokens};
+
 use analyze::Ownerships;
 use check::App;
-use quote::{Ident, Tokens};
-use rtfm_syntax::error::*;
 
 fn krate() -> Ident {
     Ident::from("rtfm")
 }
 
-pub fn app(app: &App, ownerships: &Ownerships) -> Result<Tokens> {
+pub fn app(app: &App, ownerships: &Ownerships) -> Tokens {
     let mut root = vec![];
     let mut main = vec![];
 
@@ -23,7 +23,7 @@ pub fn app(app: &App, ownerships: &Ownerships) -> Result<Tokens> {
         }
     });
 
-    Ok(quote!(#(#root)*))
+    quote!(#(#root)*)
 }
 
 // Check that the interrupts are valid
@@ -249,7 +249,6 @@ fn idle(
             #(#mod_items)*
         }
     });
-
 
     let idle = &app.idle.path;
     main.push(quote! {

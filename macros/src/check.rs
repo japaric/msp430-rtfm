@@ -23,28 +23,44 @@ pub fn app(app: ::rtfm_syntax::App) -> Result<App> {
     let mut tasks = HashMap::new();
 
     for (k, v) in app.tasks {
-        tasks.insert(k, ::check::task(v)?);
+        let name = k.clone();
+        tasks.insert(
+            k,
+            ::check::task(v)
+                .chain_err(|| format!("checking task `{}`", name))?,
+        );
     }
 
+    let app = App {
+        device: app.device,
+        idle: app.idle,
+        init: app.init,
+        resources: app.resources,
+        tasks: tasks,
+    };
+
+    ::check::resources(&app)?;
+
+    Ok(app)
+}
+
+fn resources(app: &App) -> Result<()> {
     for resource in app.resources.keys() {
         if app.idle.resources.contains(resource) {
             continue;
         }
 
-        if tasks.values().any(|task| task.resources.contains(resource)) {
+        if app.tasks
+            .values()
+            .any(|task| task.resources.contains(resource))
+        {
             continue;
         }
 
         bail!("resource `{}` is unused", resource);
     }
 
-    Ok(App {
-        device: app.device,
-        idle: app.idle,
-        init: app.init,
-        resources: app.resources,
-        tasks: tasks,
-    })
+    Ok(())
 }
 
 fn task(task: ::rtfm_syntax::Task) -> Result<Task> {

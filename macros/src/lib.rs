@@ -33,8 +33,7 @@ fn run(ts: TokenStream) -> Result<TokenStream> {
     )?;
 
     let ownerships = analyze::app(&app);
-    let tokens = trans::app(&app, &ownerships)
-        .chain_err(|| "translating the application")?;
+    let tokens = trans::app(&app, &ownerships);
 
     Ok(format!("{}", tokens)
         .parse()
