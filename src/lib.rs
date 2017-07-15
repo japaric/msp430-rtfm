@@ -13,7 +13,7 @@ pub use msp430::interrupt::CriticalSection;
 #[doc(hidden)]
 pub use msp430::interrupt::enable;
 pub use msp430::interrupt::free as atomic;
-pub use msp430_rtfm_macros::rtfm;
+pub use msp430_rtfm_macros::app;
 #[doc(hidden)]
 pub use static_ref::Static;
 
