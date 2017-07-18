@@ -1,15 +1,14 @@
 use std::collections::HashMap;
 
-use quote::Tokens;
 use syntax::error::*;
 use syntax::{self, Idents, Statics};
 use syntax::check::{self, Idle, Init};
-use syn::Ident;
+use syn::{Ident, Path};
 
 pub type Tasks = HashMap<Ident, Task>;
 
 pub struct App {
-    pub device: Tokens,
+    pub device: Path,
     pub idle: Idle,
     pub init: Init,
     pub resources: Statics,
