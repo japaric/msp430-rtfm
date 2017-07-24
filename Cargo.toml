@@ -5,9 +5,7 @@ version = "0.1.0"
 
 [dependencies]
 static-ref = "0.2.0"
-
-[dependencies.msp430]
-git = "https://github.com/pftbest/msp430"
+msp430 = "0.1.0"
 
 [dependencies.msp430-rtfm-macros]
 path = "macros"

@@ -119,39 +119,6 @@ fn idle(
     let mut tys = vec![];
     let mut exprs = vec![];
 
-    if !app.idle.locals.is_empty() {
-        let mut lexprs = vec![];
-        let mut lfields = vec![];
-
-        for (name, resource) in &app.idle.locals {
-            let expr = &resource.expr;
-            let ty = &resource.ty;
-
-            lfields.push(quote! {
-                pub #name: #ty,
-            });
-
-            lexprs.push(quote! {
-                #name: #expr,
-            });
-        }
-
-        mod_items.push(quote! {
-            pub struct Locals {
-                #(#lfields)*
-            }
-        });
-
-        tys.push(quote!(&'static mut idle::Locals));
-        exprs.push(quote!(unsafe { &mut LOCALS }));
-
-        main.push(quote! {
-            static mut LOCALS: idle::Locals = idle::Locals {
-                #(#lexprs)*
-            };
-        });
-    }
-
     if !app.idle.resources.is_empty() {
         let device = &app.device;
         let mut lifetime = None;
