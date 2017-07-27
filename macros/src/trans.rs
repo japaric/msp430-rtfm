@@ -28,16 +28,29 @@ pub fn app(app: &App, ownerships: &Ownerships) -> Tokens {
     quote!(#(#root)*)
 }
 
-// Checks that the interrupts are valid
-// Sadly we can't do this test at expansion time. Instead we'll generate some
-// code that won't compile if the interrupt name is invalid.
+// Sadly we can't do these tests at expansion time. Instead we'll generate some
+// code that won't compile if the test fails.
 fn check(app: &App, main: &mut Vec<Tokens>) {
     let device = &app.device;
 
+    // Checks that the interrupts are valid
     for task in app.tasks.keys() {
         main.push(quote! {
             let _ = #device::Interrupt::#task;
         });
+    }
+
+    // Checks that all the resource data implements the `Send` trait
+    if !app.resources.is_empty() {
+        main.push(quote! {
+            fn is_send<T>() where T: Send {}
+        });
+    }
+
+    for resource in app.resources.values() {
+        let ty = &resource.ty;
+
+        main.push(quote!(is_send::<#ty>();));
     }
 }
 
