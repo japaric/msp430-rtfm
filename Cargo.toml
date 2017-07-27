@@ -1,11 +1,31 @@
 [package]
 authors = ["Jorge Aparicio <jorge@japaric.io>"]
+categories = ["concurrency", "embedded", "no-std"]
+description = "Real Time For the Masses (RTFM), a framework for building concurrent applications, for MSP430 microcontrollers"
+documentation = "https://docs.rs/msp430-rtfm"
+keywords = ["msp430"]
+license = "MIT OR Apache-2.0"
 name = "msp430-rtfm"
+repository = "https://github.com/japaric/msp430-rtfm"
 version = "0.1.0"
 
 [dependencies]
-static-ref = "0.2.0"
 msp430 = "0.1.0"
+static-ref = "0.2.0"
 
 [dependencies.msp430-rtfm-macros]
 path = "macros"
+
+[dependencies.rtfm-core]
+git = "https://github.com/japaric/rtfm-core"
+
+[dev-dependencies.msp430-rt]
+features = ["abort-on-panic"]
+version = "0.1.0"
+
+[dev-dependencies.msp430g2553]
+features = ["rt"]
+version = "0.1.0"
+
+[profile.release]
+lto = true

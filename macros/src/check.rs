@@ -16,6 +16,7 @@ pub struct App {
 }
 
 pub struct Task {
+    pub path: Option<Path>,
     pub resources: Idents,
 }
 
@@ -76,6 +77,7 @@ fn task(task: syntax::check::Task) -> Result<Task> {
     );
 
     Ok(Task {
+        path: task.path,
         resources: task.resources,
     })
 }

@@ -1,0 +1,5 @@
+[target.msp430-none-elf]
+rustflags = [
+    "-C", "link-arg=-nostartfiles",
+    "-C", "link-arg=-Tlink.x",
+]
