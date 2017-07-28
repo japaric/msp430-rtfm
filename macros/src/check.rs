@@ -16,7 +16,7 @@ pub struct App {
 }
 
 pub struct Task {
-    pub path: Option<Path>,
+    pub path: Path,
     pub resources: Idents,
 }
 
@@ -77,7 +77,7 @@ fn task(task: syntax::check::Task) -> Result<Task> {
     );
 
     Ok(Task {
-        path: task.path,
+        path: task.path.ok_or("`path` field missing")?,
         resources: task.resources,
     })
 }

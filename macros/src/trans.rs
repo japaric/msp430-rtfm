@@ -514,32 +514,30 @@ fn tasks(app: &App, root: &mut Vec<Tokens>) {
             });
         }
 
-        if let Some(path) = task.path.as_ref() {
-            let mut tys = vec![];
-            let mut exprs = vec![];
+        let mut tys = vec![];
+        let mut exprs = vec![];
 
-            if has_resources {
-                tys.push(quote!(&mut #krate::Threshold));
-                tys.push(quote!(#name::Resources));
+        if has_resources {
+            tys.push(quote!(&mut #krate::Threshold));
+            tys.push(quote!(#name::Resources));
 
-                exprs.push(quote!(&mut #krate::Threshold::max()));
-                exprs.push(quote!(#name::Resources::new()));
-            }
-
-            let _name = Ident::new(format!("_{}", name));
-            let export_name =
-                Lit::Str(name.as_ref().to_owned(), StrStyle::Cooked);
-            root.push(quote! {
-                #[allow(non_snake_case)]
-                #[allow(unsafe_code)]
-                #[export_name = #export_name]
-                pub unsafe extern "msp430-interrupt" fn #_name() {
-                    let f: fn(#(#tys,)*) = #path;
-
-                    f(#(#exprs,)*)
-                }
-            });
+            exprs.push(quote!(&mut #krate::Threshold::max()));
+            exprs.push(quote!(#name::Resources::new()));
         }
+
+        let _name = Ident::new(format!("_{}", name));
+        let export_name = Lit::Str(name.as_ref().to_owned(), StrStyle::Cooked);
+        let path = &task.path;
+        root.push(quote! {
+            #[allow(non_snake_case)]
+            #[allow(unsafe_code)]
+            #[export_name = #export_name]
+            pub unsafe extern "msp430-interrupt" fn #_name() {
+                let f: fn(#(#tys,)*) = #path;
+
+                f(#(#exprs,)*)
+            }
+        });
 
         root.push(quote! {
             #[allow(dead_code)]
