@@ -539,13 +539,15 @@ fn tasks(app: &App, root: &mut Vec<Tokens>) {
             }
         });
 
-        root.push(quote! {
-            #[allow(dead_code)]
-            #[allow(non_snake_case)]
-            #[allow(unsafe_code)]
-            mod #name {
-                #(#items)*
-            }
-        });
+        if !items.is_empty() {
+            root.push(quote! {
+                #[allow(dead_code)]
+                #[allow(non_snake_case)]
+                #[allow(unsafe_code)]
+                mod #name {
+                    #(#items)*
+                }
+            });
+        }
     }
 }
