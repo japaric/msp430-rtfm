@@ -16,6 +16,10 @@ app! { //~ error bound `rtfm::Threshold: core::marker::Send` is not satisfied
         static TOKEN: Option<Threshold> = None;
     },
 
+    idle: {
+        resources: [TOKEN],
+    },
+
     tasks: {
         TIMER0_A0: {
             path: timer0_a0,

@@ -39,19 +39,6 @@ fn check(app: &App, main: &mut Vec<Tokens>) {
             let _ = #device::Interrupt::#task;
         });
     }
-
-    // Checks that all the resource data implements the `Send` trait
-    if !app.resources.is_empty() {
-        main.push(quote! {
-            fn is_send<T>() where T: Send {}
-        });
-    }
-
-    for resource in app.resources.values() {
-        let ty = &resource.ty;
-
-        main.push(quote!(is_send::<#ty>();));
-    }
 }
 
 fn idle(
