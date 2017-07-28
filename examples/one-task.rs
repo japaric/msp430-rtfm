@@ -13,28 +13,29 @@ use rtfm::{app, Threshold};
 app! {
     device: msp430g2553,
 
-    // Here resources are declared
+    // Here data resources are declared
     //
-    // Resources are static variables that are safe to share across tasks
+    // Data resources are static variables that are safe to share across tasks
     resources: {
-        // declaration of resources looks exactly like declaration of static
+        // Declaration of resources looks exactly like declaration of static
         // variables
         static ON: bool = false;
     },
 
     // Here tasks are declared
     //
-    // Each task corresponds to an interrupt or an exception. Every time the
-    // interrupt or exception becomes *pending* the corresponding task handler
-    // will be executed.
+    // Each task corresponds to an interrupt. Every time the interrupt becomes
+    // *pending* the corresponding *task handler* will be executed.
     tasks: {
-        // Here we declare that we'll use the SYS_TICK exception as a task
+        // Here we declare that we'll use the TIMER0_A1 interrupt as a task
         TIMER0_A1: {
+            // Path to the task handler
             path: timer0_a1,
 
-            // These are the *resources* associated with this task
+            // These are the resources this task has access to
             //
-            // The peripherals that the task needs can be listed here
+            // A resource can be a peripheral like `PORT_1_2` or a static
+            // variable like `ON`
             resources: [ON, PORT_1_2],
         },
     }
@@ -52,8 +53,10 @@ fn idle() -> ! {
 
 // This is the task handler of the TIMER0_A1 interrupt
 //
-// `r` is the resources this task has access to. `TIMER0_13::Resources` has one
-// field per resource declared in `app!`.
+// `_t` is the preemption threshold token. We won't use it in this program.
+//
+// `r` is the set of resources this task has access to. `TIMER0_A1::Resources`
+// has one field per resource declared in `app!`.
 fn timer0_a1(_t: &mut Threshold, r: TIMER0_A1::Resources) {
     // toggle state
     **r.ON = !**r.ON;

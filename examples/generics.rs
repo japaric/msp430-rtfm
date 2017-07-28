@@ -25,17 +25,9 @@ app! {
     },
 }
 
-fn init(_p: init::Peripherals) {}
-
-fn idle(t: &mut Threshold, r: idle::Resources) -> ! {
-    work(t, &r.PORT_1_2, &r.TIMER0_A3);
-
-    loop {}
-}
-
-// a generic function to use resources in any task (regardless of its priority)
+// A generic function that uses some resources
 fn work<P, T>(t: &mut Threshold, port1: &P, timer0: &T)
-where
+    where
     P: Resource<Data = PORT_1_2>,
     T: Resource<Data = TIMER0_A3>,
 {
@@ -54,7 +46,16 @@ where
     });
 }
 
-// this task needs critical sections to access the resources
+fn init(_p: init::Peripherals) {}
+
+// `idle` needs critical sections to access the resources
+fn idle(t: &mut Threshold, r: idle::Resources) -> ! {
+    work(t, &r.PORT_1_2, &r.TIMER0_A3);
+
+    loop {}
+}
+
+// This task has direct access to the resources
 fn timer0_a0(t: &mut Threshold, r: TIMER0_A0::Resources) {
     work(t, r.PORT_1_2, r.TIMER0_A3);
 }

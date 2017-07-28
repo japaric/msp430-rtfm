@@ -15,7 +15,7 @@ use rtfm::app;
 // This macro will expand to a `main` function so you don't need to supply
 // `main` yourself.
 app! {
-    // this is a path to the device crate
+    // this is the path to the device crate
     device: msp430g2553,
 }
 
@@ -32,7 +32,7 @@ fn init(p: init::Peripherals) {
 
 // The idle loop.
 //
-// This runs afterwards and has a priority of 0. All tasks can preempt this
+// This runs after `init` and has a priority of 0. All tasks can preempt this
 // function. This function can never return so it must contain some sort of
 // endless loop.
 fn idle() -> ! {

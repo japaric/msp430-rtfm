@@ -1,4 +1,4 @@
-//! Two tasks running at the same priority with access to the same resource
+//! Two tasks running at the *same* priority with access to the same resource
 #![deny(unsafe_code)]
 #![feature(abi_msp430_interrupt)]
 #![feature(const_fn)]
@@ -13,32 +13,25 @@ use rtfm::{app, Threshold};
 app! {
     device: msp430g2553,
 
-    // Resources that are plain data, not peripherals
     resources: {
-        // Declaration of resources looks like the declaration of `static`
-        // variables
         static COUNTER: u64 = 0;
     },
 
+    // Both TIMER0_A0 and TIMER0_A1 have access to the `COUNTER` data
     tasks: {
         TIMER0_A0: {
             path: timer0_a0,
-            // Both this task and TIM2 have access to the `COUNTER` resource
             resources: [COUNTER],
         },
 
-        // An interrupt as a task
         TIMER0_A1: {
-            // For interrupts the `enabled` field must be specified. It
-            // indicates if the interrupt will be enabled or disabled once
-            // `idle` starts
             path: timer0_a1,
             resources: [COUNTER],
         },
     },
 }
 
-// when data resources are declared in the top `resources` field, `init` will
+// When data resources are declared in the top `resources` field, `init` will
 // have full access to them
 fn init(_p: init::Peripherals, _r: init::Resources) {
     // ..

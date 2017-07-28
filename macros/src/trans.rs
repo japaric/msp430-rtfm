@@ -275,6 +275,7 @@ fn resources(app: &App, ownerships: &Ownerships, root: &mut Vec<Tokens>) {
                 impl_items.push(quote! {
                     type Data = #ty;
 
+                    #[inline]
                     fn borrow<'cs>(
                         &'cs self,
                         t: &'cs #krate::Threshold,
@@ -284,6 +285,7 @@ fn resources(app: &App, ownerships: &Ownerships, root: &mut Vec<Tokens>) {
                         unsafe { #krate::Static::ref_(&#_name) }
                     }
 
+                    #[inline]
                     fn borrow_mut<'cs>(
                         &'cs mut self,
                         t: &'cs #krate::Threshold,
@@ -293,6 +295,7 @@ fn resources(app: &App, ownerships: &Ownerships, root: &mut Vec<Tokens>) {
                         unsafe { #krate::Static::ref_mut(&mut #_name) }
                     }
 
+                    #[inline]
                     fn claim<R, F>(
                         &self,
                         t: &mut #krate::Threshold,
@@ -312,6 +315,7 @@ fn resources(app: &App, ownerships: &Ownerships, root: &mut Vec<Tokens>) {
                         }
                     }
 
+                    #[inline]
                     fn claim_mut<R, F>(
                         &mut self,
                         t: &mut #krate::Threshold,
@@ -336,6 +340,7 @@ fn resources(app: &App, ownerships: &Ownerships, root: &mut Vec<Tokens>) {
                 impl_items.push(quote! {
                     type Data = #device::#name;
 
+                    #[inline]
                     fn borrow<'cs>(
                         &'cs self,
                         t: &'cs #krate::Threshold,
@@ -345,6 +350,7 @@ fn resources(app: &App, ownerships: &Ownerships, root: &mut Vec<Tokens>) {
                         unsafe { #krate::Static::ref_(&*#device::#name.get()) }
                     }
 
+                    #[inline]
                     fn borrow_mut<'cs>(
                         &'cs mut self,
                         t: &'cs #krate::Threshold,
@@ -356,6 +362,7 @@ fn resources(app: &App, ownerships: &Ownerships, root: &mut Vec<Tokens>) {
                         }
                     }
 
+                    #[inline]
                     fn claim<R, F>(
                         &self,
                         t: &mut #krate::Threshold,
@@ -375,6 +382,7 @@ fn resources(app: &App, ownerships: &Ownerships, root: &mut Vec<Tokens>) {
                         }
                     }
 
+                    #[inline]
                     fn claim_mut<R, F>(
                         &mut self,
                         t: &mut #krate::Threshold,

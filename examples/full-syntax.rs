@@ -8,7 +8,7 @@
 extern crate msp430_rtfm as rtfm;
 extern crate msp430g2553;
 
-use rtfm::{app, Resource, Threshold};
+use rtfm::{app, Threshold};
 
 app! {
     device: msp430g2553,
@@ -21,11 +21,17 @@ app! {
     },
 
     init: {
-        path: init_, // this is a path to the "init" function
+        // This is the path to the `init` function
+        //
+        // `init` doesn't necessarily has to be in the root of the crate
+        path: main::init,
     },
 
     idle: {
-        path: idle_, // this is a path to the "idle" function
+        // This is a path to the `idle` function
+        //
+        // `idle` doesn't necessarily has to be in the root of the crate
+        path: main::idle,
         resources: [OWNED, SHARED],
     },
 
@@ -42,18 +48,22 @@ app! {
     },
 }
 
-fn init_(_p: init::Peripherals, _r: init::Resources) {}
+mod main {
+    use rtfm::{Resource, Threshold};
 
-fn idle_(t: &mut Threshold, mut r: idle::Resources) -> ! {
-    loop {
-        *r.OWNED != *r.OWNED;
+    pub fn init(_p: ::init::Peripherals, _r: ::init::Resources) {}
 
-        if *r.OWNED {
-            if r.SHARED.claim(t, |shared, _| **shared) {
-                // ..
+    pub fn idle(t: &mut Threshold, mut r: ::idle::Resources) -> ! {
+        loop {
+            *r.OWNED != *r.OWNED;
+
+            if *r.OWNED {
+                if r.SHARED.claim(t, |shared, _| **shared) {
+                    // ..
+                }
+            } else {
+                r.SHARED.claim_mut(t, |shared, _| **shared = !**shared);
             }
-        } else {
-            r.SHARED.claim_mut(t, |shared, _| **shared = !**shared);
         }
     }
 }
