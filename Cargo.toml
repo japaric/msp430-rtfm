@@ -11,13 +11,11 @@ version = "0.1.0"
 
 [dependencies]
 msp430 = "0.1.0"
+rtfm-core = "0.1.0"
 static-ref = "0.2.1"
 
 [dependencies.msp430-rtfm-macros]
 path = "macros"
-
-[dependencies.rtfm-core]
-git = "https://github.com/japaric/rtfm-core"
 
 [target.'cfg(target_arch = "x86_64")'.dev-dependencies]
 compiletest_rs = "0.2.8"

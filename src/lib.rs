@@ -26,7 +26,9 @@ pub use msp430::interrupt::enable;
 pub use msp430_rtfm_macros::app;
 use msp430::interrupt;
 
-/// Executes the closure `f` in an interrupt free context
+/// Executes the closure `f` in a preemption free context
+///
+/// During the execution of the closure no task can preempt the current task.
 #[inline]
 pub fn atomic<R, F>(t: &mut Threshold, f: F) -> R
 where
